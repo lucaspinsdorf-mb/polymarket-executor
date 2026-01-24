@@ -1,0 +1,74 @@
+═══════════════════════════════════════════════════════════════
+🚀 POLYMARKET EXECUTOR - AÇÕES IMEDIATAS
+═══════════════════════════════════════════════════════════════
+
+📍 VOCÊ ESTÁ AQUI: /workspaces/polymarket-executor
+✅ Todos os arquivos prontos e commitados localmente
+
+═══════════════════════════════════════════════════════════════
+🎯 AÇÃO 1: CRIAR REPO NO GITHUB
+═══════════════════════════════════════════════════════════════
+
+1. Abra no navegador: https://github.com/new
+
+2. Preencha:
+   Repository name: polymarket-executor
+   Description: Trading adapter service to bypass Polymarket geo-blocking
+   Visibility: Public
+   [ ] NÃO marque "Add README"
+
+3. Clique "Create repository"
+
+4. Na próxima tela, copie e cole AQUI NO TERMINAL:
+
+   git remote add origin https://github.com/lucaspinsdorf-mb/polymarket-executor.git
+   git branch -M main
+   git push -u origin main
+
+═══════════════════════════════════════════════════════════════
+🎯 AÇÃO 2: DEPLOY NA RAILWAY
+═══════════════════════════════════════════════════════════════
+
+1. Acesse: https://railway.app/new
+2. "Deploy from GitHub repo" → Autorize se necessário
+3. Selecione: lucaspinsdorf-mb/polymarket-executor
+
+4. ⚠️ CRÍTICO - Settings → Region:
+   ✅ ESCOLHA: europe-west4 (Netherlands) ou europe-west1 (Belgium)
+   ❌ NÃO USE: europe-west2 (UK) ou europe-west3 (Germany)
+
+5. Variables → Add 11 variáveis:
+
+═══════════════════════════════════════════════════════════════
+📋 ENVIRONMENT VARIABLES PARA RAILWAY
+═══════════════════════════════════════════════════════════════
+
+COPIE ESTAS VARIÁVEIS (valores já gerados):
+
+EXECUTOR_API_TOKEN=fbrYi8HUb_RTFW4JKC4-4Z2Ekza6UQbvqh8-Ro8B05s
+
+POLYMARKET_HOST=https://clob.polymarket.com
+POLYMARKET_CHAIN_ID=137
+POLYMARKET_PRIVATE_KEY=<COPIAR_DO_SEU_.ENV_DO_CORE>
+POLYMARKET_API_NONCE=0
+
+POLY_EXCHANGE_ADDRESS=0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E
+POLY_CTF_ADDRESS=0x4D97DCd97eC945f40cF65F87097ACe5EA0476045
+POLY_COLLATERAL_TOKEN_ADDRESS=0x2791Bca1f2de4661ed88A30C99A7a9449Aa84174
+
+POLYGON_RPC_URL=https://polygon-rpc.com
+
+⚠️ ATENÇÃO: Trocar apenas POLYMARKET_PRIVATE_KEY pela sua chave real!
+
+═══════════════════════════════════════════════════════════════
+🧪 AÇÃO 3: APÓS DEPLOY - ME AVISE COM:
+═══════════════════════════════════════════════════════════════
+
+✅ URL do Railway (ex: polymarket-executor-production-abc123.up.railway.app)
+✅ Token gerado: fbrYi8HUb_RTFW4JKC4-4Z2Ekza6UQbvqh8-Ro8B05s
+
+Vou testar o geoblock e integrar com o Core!
+
+═══════════════════════════════════════════════════════════════
+📚 DOCUMENTAÇÃO COMPLETA: DEPLOY_GUIDE.md
+═══════════════════════════════════════════════════════════════
