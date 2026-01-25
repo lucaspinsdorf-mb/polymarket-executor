@@ -47,13 +47,25 @@ app.get("/polymarket/geoblock", async (_req, res) => {
   res.status(r.status).json({ ok: r.ok, status: r.status, data });
 });
 
-app.get("/polymarket/address", async (_req, res) => {
-  const address = await getPolymarketAddress();
+app.get("/polymarket/address", async (req, res) => {
+  const userPhone = req.header("x-user-phone");
+  
+  if (!userPhone) {
+    return res.status(400).json({ ok: false, error: "MISSING_USER_PHONE_HEADER" });
+  }
+
+  const address = await getPolymarketAddress(userPhone);
   res.json({ ok: true, address });
 });
 
-app.get("/polymarket/balance", async (_req, res) => {
-  const client = await getL2Client();
+app.get("/polymarket/balance", async (req, res) => {
+  const userPhone = req.header("x-user-phone");
+  
+  if (!userPhone) {
+    return res.status(400).json({ ok: false, error: "MISSING_USER_PHONE_HEADER" });
+  }
+
+  const client = await getL2Client(userPhone);
   const collateral = await client.getBalanceAllowance({
     asset_type: AssetType.COLLATERAL,
   });
@@ -62,12 +74,22 @@ app.get("/polymarket/balance", async (_req, res) => {
 });
 
 app.get("/polymarket/orderbook/:tokenId", async (req, res) => {
-  const client = await getL2Client();
+  // Orderbook é público, não precisa de user phone
+  // Mas aceitamos o header se vier (para compatibilidade)
+  const userPhone = req.header("x-user-phone") || "+5511000000000"; // default fallback
+  
+  const client = await getL2Client(userPhone);
   const book = await client.getOrderBook(req.params.tokenId);
   res.json({ ok: true, data: book });
 });
 
 app.post("/polymarket/orders/market", async (req, res) => {
+  const userPhone = req.header("x-user-phone");
+  
+  if (!userPhone) {
+    return res.status(400).json({ ok: false, error: "MISSING_USER_PHONE_HEADER" });
+  }
+
   const body = z
     .object({
       tokenId: z.string().min(1),
@@ -76,7 +98,9 @@ app.post("/polymarket/orders/market", async (req, res) => {
     })
     .parse(req.body);
 
-  const client = await getL2Client();
+  console.log(`[Executor] Market order for user ${userPhone.slice(-4)}: ${body.side} ${body.amount} of ${body.tokenId}`);
+
+  const client = await getL2Client(userPhone);
 
   const result = await client.createAndPostMarketOrder({
     tokenID: body.tokenId,
@@ -88,14 +112,15 @@ app.post("/polymarket/orders/market", async (req, res) => {
 });
 
 app.get("/polymarket/markets/top", async (req, res) => {
+  // Market discovery é público, não precisa de user phone
   const limit = Number(req.query.limit ?? "10");
   const data = await gammaTopMarkets(Number.isFinite(limit) ? limit : 10);
   res.json({ ok: true, data });
 });
 
-// Porta diferente do core pra não conflitar
 const port = process.env.PORT ? Number(process.env.PORT) : 3001;
 
 app.listen(port, "0.0.0.0", () => {
+  console.log(`[executor] Multi-user mode enabled`);
   console.log(`[executor] listening on http://0.0.0.0:${port}`);
 });
