@@ -66,11 +66,14 @@ app.get("/polymarket/balance", async (req, res) => {
   }
 
   const client = await getL2Client(userPhone);
+  const address = await getPolymarketAddress(userPhone);
+  
   const collateral = await client.getBalanceAllowance({
     asset_type: AssetType.COLLATERAL,
   });
 
-  res.json({ ok: true, data: collateral });
+  // Add address to response for fund isolation validation
+  res.json({ ok: true, data: { ...collateral, address } });
 });
 
 app.get("/polymarket/orderbook/:tokenId", async (req, res) => {
