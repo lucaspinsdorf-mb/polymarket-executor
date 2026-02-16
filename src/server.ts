@@ -3,7 +3,7 @@ import cors from "cors";
 import "dotenv/config";
 import { z } from "zod";
 
-import { getL2Client, getPolymarketAddress, Side, AssetType } from "./polymarketClob";
+import { getL2Client, getPolymarketAddress, Side, AssetType, OrderType } from "./polymarketClob";
 import { gammaTopMarkets } from "./polymarketGamma";
 
 const app = express();
@@ -105,11 +105,18 @@ app.post("/polymarket/orders/market", async (req, res) => {
 
   const client = await getL2Client(userPhone);
 
-  const result = await client.createAndPostMarketOrder({
-    tokenID: body.tokenId,
-    side: body.side === "BUY" ? Side.BUY : Side.SELL,
-    amount: body.amount,
-  });
+  // BUG-38 FIX: Use FAK (Fill and Kill) instead of FOK (Fill or Kill).
+  // FOK rejects the entire order if orderbook can't fill 100%.
+  // FAK fills what's available and cancels the rest — better for thin liquidity markets.
+  const result = await client.createAndPostMarketOrder(
+    {
+      tokenID: body.tokenId,
+      side: body.side === "BUY" ? Side.BUY : Side.SELL,
+      amount: body.amount,
+    },
+    undefined, // options
+    OrderType.FAK,
+  );
 
   res.json({ ok: true, data: result });
 });

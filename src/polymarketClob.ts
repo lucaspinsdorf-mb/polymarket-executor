@@ -1,4 +1,4 @@
-import { ClobClient, Side, AssetType } from "@polymarket/clob-client";
+import { ClobClient, Side, AssetType, OrderType } from "@polymarket/clob-client";
 import { Wallet } from "ethers";
 import { getThirdwebSigner } from "./thirdwebWallet";
 
@@ -91,4 +91,4 @@ export async function getL2Client(phone: string) {
   return new ClobClient(POLYMARKET_HOST, POLYMARKET_CHAIN_ID, signer, creds, 0, funder);
 }
 
-export { Side, AssetType };
+export { Side, AssetType, OrderType };
